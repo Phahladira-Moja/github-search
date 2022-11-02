@@ -22,6 +22,9 @@ export class AppComponent implements OnInit{
   public isLoading = false;
   public areCommitsPresent:boolean = false;
 
+  private currentOwner = '';
+  private currentRepo = '';
+
   formGroup = new FormGroup({
     owner: new FormControl('', [Validators.required, Validators.minLength(3)]),
     repo: new FormControl('', [Validators.required, Validators.minLength(3)])
@@ -46,27 +49,49 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.searchForUser();
     this.searchFormControl?.valueChanges.subscribe(
       value => this.onChange(value)
     )
   }
 
   async searchForUser(){
-    this.isLoading = true;
-    const results = await this.appService.getGithubCommits(
-      this.ownerFormControl?.value != '' ? this.ownerFormControl?.value : 'octocat',
-      this.repoFormControl?.value != '' ? this.repoFormControl?.value : 'Spoon-Knife',
-      this.currentPage
-    )
-    this.commitsArray = this.commitsArray.concat(results)
-    this.isLoading = false;
+    try {
+      let resultLength = 0
+      this.isLoading = true;
+      if (this.ownerFormControl?.value !=this.currentOwner ||  this.repoFormControl?.value != this.currentRepo) {
+        this.commitsArray =  await this.appService.getGithubCommits(
+          this.ownerFormControl?.value.toString().trim(),
+          this.repoFormControl?.value.toString().trim(),
+          0
+        )
+        this.currentPage = 0;
+        resultLength = this.commitsArray.length;
+        this.currentOwner = this.ownerFormControl?.value;
+        this.currentRepo = this.repoFormControl?.value;
+      } else {
+        const results = await this.appService.getGithubCommits(
+          this.ownerFormControl?.value.toString().trim(),
+          this.repoFormControl?.value.toString().trim(),
+          this.currentPage
+        )
+        resultLength = results.length;
+        this.commitsArray = this.commitsArray.concat(results)
+      }
 
-    if (results.length == 20) {
-      this.currentPage = this.currentPage+1;
-      this.canViewMore = true;
-    } else {
-      this.canViewMore = false;
+      
+      this.isLoading = false;
+
+     
+
+      if (resultLength == 20) {
+        this.currentPage = this.currentPage+1;
+        this.canViewMore = true;
+      } else {
+        this.canViewMore = false;
+      }
+    } catch (error) {
+        alert("An error occurred with your search. Please make sure that the input provided is valid.")
+        this.isLoading = false;
     }
   }
 
@@ -80,8 +105,6 @@ export class AppComponent implements OnInit{
     this.tabIndex = index;
     if ( index == 1 && this.readLaterArray.length == 0) {
       await this.getReadLaterCommits();
-    } else if (index == 0 && this.commitsArray.length == 0) {
-      await this.searchForUser();
     }
 
     index == 1 ? this.isViewingReadLaterCommits = true : this.isViewingReadLaterCommits = false
@@ -90,21 +113,37 @@ export class AppComponent implements OnInit{
   async saveToReadLater(commit: Commit) {
 
     if (commit.readLater) {
-      commit.readLater = !commit.readLater;
-      this.readLaterArray = this.readLaterArray.filter(commitFilter => commit.id != commitFilter.id)
+      try {
+        commit.readLater = !commit.readLater;
+        this.readLaterArray = this.readLaterArray.filter(commitFilter => commit.id != commitFilter.id)
 
-      this.commitsArray.forEach(commitFilter => {
-        if (commitFilter.id == commit.id) {
-          commit.readLater = false;
+        this.commitsArray.forEach(commitFilter => {
+          if (commitFilter.id == commit.id) {
+            commit.readLater = false;
+          }
+        })
+
+        const result: any = this.appService.deleteCommit(commit.id);
+        
+        if (result.Result == "FAILED") {
+          alert(result.Message)
         }
-      })
-
-      this.appService.deleteCommit(commit.id);
+      } catch (error) {
+        alert("An unexpected error occurred while removing the commit from the database. Please try again later.")
+      }
     } else {
-      commit.readLater = !commit.readLater;
-      if (this.readLaterArray.filter(commitFilter => commit.id == commitFilter.id).length == 0) this.readLaterArray.push(commit)
+      try {
+        commit.readLater = !commit.readLater;
+        if (this.readLaterArray.filter(commitFilter => commit.id == commitFilter.id).length == 0) this.readLaterArray.push(commit)
 
-      this.appService.addCommit(commit);
+        const result: any = this.appService.addCommit(commit);
+
+        if (result.Result == "FAILED") {
+          alert(result.Message)
+        }
+      } catch (error) {
+        alert("An unexpected error occurred while adding the commit from the database. Please try again later.")
+      }
     }
 
   }

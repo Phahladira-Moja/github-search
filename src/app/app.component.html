@@ -1,5 +1,7 @@
 <div class="toolbar">
-  <h1>Github Commit Search</h1>
+  <h2>Github Commit Search</h2>
+  <div class="spacer"></div>
+  <img id="github-logo" src="../assets/github-logo.png" alt="github-logo" srcset="">
 </div>
 
 <div class="container">
@@ -13,7 +15,7 @@
       <input [disabled]="!canViewMore" class="submit-button" type="submit" id="more-button" value="Next">
     </form>
     <form [formGroup]="searchFormGroup" class="form-row">
-      <input class="input-field" type="text" formControlName="search" placeholder="Please Enter Commit Message">
+      <input id="search-field" class="input-field" type="text" formControlName="search" placeholder="Please Enter Commit Message">
     </form>
   </div>
 
@@ -26,35 +28,58 @@
       <div [ngClass]="tabIndex == 1 ? 'tab-active' : 'tab'" (click)="onTabChanged(1);">Read Later</div>
     </div>
 
-    <div id="commit-div" *ngIf="tabIndex == 0; else readLaterContainer">
-      <div class="commit-card" *ngFor="let commit of (isSearching ? searchArray  : commitsArray)">
-        <img [src]="commit.committer.avatarUrl">
-        <div class="commit-message"> <p><b>Commit Message:</b> {{ commit.message }}</p> </div>
-        <button *ngIf="!commit.readLater; else readLater" class="icon-button" (click)="saveToReadLater(commit)">
-          <mat-icon >bookmark_border</mat-icon>
-        </button>
-        <ng-template #readLater>
-          <button class="icon-button" (click)="saveToReadLater(commit)">
-            <mat-icon>bookmark</mat-icon>
-          </button>
-        </ng-template>
-      </div>
+    <div class="commits-tab-container" *ngIf="tabIndex == 0; else readLaterContainer">
+        <div id="commit-div" *ngIf="((isSearching && searchArray.length > 0) || (!isSearching && commitsArray.length > 0)); else emptyPage">
+          <div class="commit-card" *ngFor="let commit of (isSearching ? searchArray  : commitsArray)">
+            <img [src]="commit.committer.avatarUrl">
+            <div class="commit-message"> <p><b>Commit Message:</b> {{ commit.message }}</p> </div>
+            <button *ngIf="!commit.readLater; else readLater" class="icon-button" (click)="saveToReadLater(commit)">
+              <mat-icon >bookmark_border</mat-icon>
+            </button>
+            <ng-template #readLater>
+              <button class="icon-button" (click)="saveToReadLater(commit)">
+                <mat-icon>bookmark</mat-icon>
+              </button>
+            </ng-template>
+          </div>
+        </div>
+      
+
+      <ng-template #emptyPage>
+        <div class="empty-image-container">
+          <img id="empty-logo" src="../assets/empty.png" alt="empty-page-logo" >
+          <h2>No Commits Present</h2>
+        </div>
+      </ng-template>
+
     </div>
 
-    <ng-template #readLaterContainer>
-      <div class="commit-card" *ngFor="let commit of (isSearching ? searchArray  : readLaterArray)">
-        <img [src]="commit.committer.avatarUrl">
-        <div class="commit-message"> <p><b>Commit Message:</b> {{ commit.message }}</p> </div>
-        <button *ngIf="!commit.readLater; else readLater" class="icon-button" (click)="saveToReadLater(commit)">
-          <mat-icon >bookmark_border</mat-icon>
-        </button>
-        <ng-template #readLater>
-          <button class="icon-button" (click)="saveToReadLater(commit)">
-            <mat-icon>bookmark</mat-icon>
-          </button>
+    <ng-template #readLaterContainer  >
+      <div class="commits-tab-container">
+        <div *ngIf="(isSearching && searchArray.length > 0) || (!isSearching && readLaterArray.length > 0); else emptyPage">
+          <div class="commit-card" *ngFor="let commit of (isSearching ? searchArray  : readLaterArray)">
+            <img [src]="commit.committer.avatarUrl">
+            <div class="commit-message"> <p><b>Commit Message:</b> {{ commit.message }}</p> </div>
+            <button *ngIf="!commit.readLater; else readLater" class="icon-button" (click)="saveToReadLater(commit)">
+              <mat-icon >bookmark_border</mat-icon>
+            </button>
+            <ng-template #readLater>
+              <button class="icon-button" (click)="saveToReadLater(commit)">
+                <mat-icon>bookmark</mat-icon>
+              </button>
+            </ng-template>
+          </div>
+        </div>
+  
+        <ng-template #emptyPage>
+          <div class="empty-image-container">
+            <img id="empty-logo" src="../assets/empty.png" alt="empty-page-logo" >
+            <h2>No Commits Present</h2>
+          </div>
         </ng-template>
       </div>
     </ng-template>
+
 
 
   </div>

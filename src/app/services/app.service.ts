@@ -15,6 +15,9 @@ export class AppService {
   // repo = "Spoon-Knife",
   // owner = "octocat",
 
+  // jbuget
+  // nodejs-clean-architecture-app
+
   async getGithubCommits(owner: string, repo: string, pageNumber: number): Promise<Commit[]> {
     const result = await this.octokit.request(`GET /repos/{owner}/{repo}/commits?page=${pageNumber}&per_page=20`, {
       owner: owner,
@@ -94,7 +97,7 @@ export class AppService {
       }
     }).toPromise();
 
-    console.log(results)
+    return results;
   }
 
   async deleteCommit(id: string) {
@@ -109,6 +112,8 @@ export class AppService {
         id: id
       }
     }).toPromise();
+
+    return results;
   }
 
   isCommitObjectValid(commit: any) {
@@ -143,21 +148,5 @@ export class AppService {
 
   }
 }
-
-
-// repo = "Spoon-Knife",
-// owner = "octocat",
-
-// async getGithubCommits(owner: string, repo: string, pageNumber: number): Promise<Commit[]> {
-//
-//   // dev-mastery
-//   // comments-api
-//   const results: any = await this.httpClient.get(`http://localhost:3000?pageNumber=${pageNumber}&commitsPerPage=20&repo=${repo}&owner=${owner}`).toPromise();
-//
-// return results;
-// }
-
-
-
 
 
