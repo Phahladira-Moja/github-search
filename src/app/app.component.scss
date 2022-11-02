@@ -1,0 +1,212 @@
+.toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  color: white;
+  padding: 0 16px;
+  background-color: #333;
+}
+
+
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  width: 60%;
+  min-height: 80vh;
+  max-height: 80vh;
+  margin: 82px auto 0px;
+}
+
+.form-container, .commits-container {
+  width: 100%;
+  padding: 8px;
+  margin: 0 auto;
+  display: flex;
+  border-radius: 8px;
+  flex-direction: column;
+  border: 1px solid #eee;
+  background-color: #fafafa;
+  box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+}
+
+.mat-spinner{
+  width: 100%;
+  padding: 8px;
+  margin: 16px auto;
+  display: flex;
+  border-radius: 8px;
+  flex-direction: column;
+  border: 1px solid #eee;
+  background-color: white;
+  box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+
+  .mat-progress-spinner {
+    z-index: 2;
+    stroke: #3e8e41;
+    background-color: transparent;
+    box-shadow: none;
+    border: none;
+  }
+}
+
+.form-container .form-row {
+  display: flex;
+  margin: 8px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .input-field {
+    flex: 1;
+    margin: 0 8px;
+    padding: 0 8px;
+    min-height: 34px;
+    border-radius: 4px;
+    border: 0.25px black solid;
+  }
+
+  input:focus {
+    outline: none !important;
+    border: 1.5px #059862 solid;
+  }
+
+  .submit-button {
+    padding: 0 16px;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    min-height: 34px;
+    background-color: #059862;
+    border: none;
+    border-radius: 4px;
+  }
+
+  #more-button{
+    margin-left: 8px;
+  }
+  // dev-mastery
+  // comments-ap
+
+  .submit-button:hover {background-color: #3e8e41}
+
+  .submit-button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 2px #666;
+    transform: translateY(1px);
+  }
+
+  .submit-button:disabled {
+    background-color: gray;
+  }
+
+  .text-danger {
+    color: red;
+    font-size: 14px;
+  }
+
+}
+
+.commits-container {
+  margin: 16px 0;
+  min-height: 60vh;
+  align-items: center;
+  padding: 16px 16px;
+  overflow: auto;
+
+  #commit-div {
+    width: 100%;
+  }
+
+  .commit-card {
+    border-radius: 4px;
+    border: 1px solid #eee;
+    background-color: white;
+    height: 45px;
+    width: 97.5%;
+    margin: 0 8px 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    transition: all 0.2s ease-in-out;
+
+    img {
+      width: 40px;
+      height: 40px;
+      display: block;
+      border-radius: 50%;
+    }
+
+    .commit-message {
+      width: 85%;
+      font-size: 14px;
+    }
+
+    .commit-message p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .icon-button {
+      border: none;
+      background-color: transparent;
+    }
+
+    .icon-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+    }
+
+    .icon-button:active {
+      box-shadow: 0 2px #666;
+      transform: translateY(1px);
+    }
+  }
+
+  .commit-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+  }
+
+}
+
+.tab-header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 16px;
+
+  .tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    font-weight: 400;
+
+    margin: 0 16px;
+
+    border-bottom: gray 2px solid;
+  }
+
+  .tab-active {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    margin: 0 16px;
+
+    border-bottom: #3e8e41 2px solid;
+  }
+}
