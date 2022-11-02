@@ -18,38 +18,36 @@ export class AppService {
   // jbuget
   // nodejs-clean-architecture-app
 
+  // dev-mastery
+  // comments-api
+
   async getGithubCommits(owner: string, repo: string, pageNumber: number): Promise<Commit[]> {
-    const result = await this.octokit.request(`GET /repos/{owner}/{repo}/commits?page=${pageNumber}&per_page=20`, {
-      owner: owner,
-      repo: repo,
-    });
+    
+    const result: any = await this.httpClient.get(`https://api.github.com/repos/${owner}/${repo}/commits?per_page=20&page=${pageNumber}`).toPromise();
 
     const commitsArray: Commit[] = [];
 
-    result.data.forEach((commit: any) => {
+
+    result.forEach((commit: any) => {
 
       if (!this.isCommitObjectValid(commit)) return;
 
-      if (!this.isAuthorObjectValid(commit)) return;
+      const author = this.isAuthorObjectValid(commit)
 
-      if (!this.isCommitterObjectValid(commit)) return;
+      const committer = this.isCommitterObjectValid(commit)
+
+  
 
       commitsArray.push({
         id: commit.sha,
         message: commit.commit.message,
         readLater: false,
         commentCount: commit.commit.comment_count,
-        author: {
-          id: commit.author.id,
-          name: commit.author.name,
-          avatarUrl: commit.author.avatar_url,
-        },
-        committer: {
-          id: commit.committer.id,
-          name: commit.committer.name,
-          avatarUrl: commit.committer.avatar_url,
-        }
+        author: author,
+        committer: committer,
       })
+
+
 
     })
 
@@ -117,34 +115,51 @@ export class AppService {
   }
 
   isCommitObjectValid(commit: any) {
-    if (commit === undefined || commit === null || commit === '') return false;
+    if (commit == undefined || commit == null || commit == '') return false;
 
-    if (commit.sha === undefined || commit.sha === null || commit.sha === '') return false;
+    if (commit.sha == undefined || commit.sha == null || commit.sha == '') return false;
 
-    if (commit.commit.message === undefined || commit.commit.message === null || commit.commit.message === '') return false;
+    if (commit.commit.message == undefined || commit.commit.message == null || commit.commit.message == '') return false;
 
     return true;
   }
 
   isAuthorObjectValid(commit: any) {
-    if (commit.author === undefined || commit.author === null || commit.author === '') return;
+    if (commit.author == undefined || commit.author == null || commit.author == '') {
+      let newAuth:any = JSON.stringify(commit.commit.author)
+      newAuth = JSON.parse(newAuth);
+      return {
+        id: newAuth.name,
+        name:  newAuth.email,
+        avatarUrl: '../assets/github-logo.png'
+      }
+      
+    };
 
-    if (commit.author.id === undefined || commit.author.id === null || commit.author.id === '') return;
-
-    if (commit.author.login === undefined || commit.author.login === null || commit.author.login === '') return;
-
-    return true;
+    return {
+      id: commit.author.id,
+      name: commit.author.name,
+      avatarUrl: commit.author.avatar_url,
+    };
 
   }
 
   isCommitterObjectValid(commit: any) {
-    if (commit.committer === undefined || commit.committer === null || commit.committer === '') return;
+    if (commit.committer == undefined || commit.committer == null || commit.committer == '') {
+      let newAuth:any = JSON.stringify(commit.commit.committer)
+      newAuth = JSON.parse(newAuth);
+      return {
+        id: newAuth.name,
+        name:  newAuth.email,
+        avatarUrl: '../assets/github-logo.png'
+      }
+    }
 
-    if (commit.committer.id === undefined || commit.committer.id === null || commit.committer.id === '') return;
-
-    if (commit.committer.login === undefined || commit.committer.login === null || commit.committer.login === '') return;
-
-    return true;
+    return {
+      id: commit.committer.id,
+      name: commit.committer.name,
+      avatarUrl: commit.committer.avatar_url,
+    };
 
   }
 }

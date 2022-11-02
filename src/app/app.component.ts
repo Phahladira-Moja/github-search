@@ -58,16 +58,17 @@ export class AppComponent implements OnInit{
     try {
       let resultLength = 0
       this.isLoading = true;
-      if (this.ownerFormControl?.value !=this.currentOwner ||  this.repoFormControl?.value != this.currentRepo) {
+      if (this.ownerFormControl?.value.toString().trim() !=this.currentOwner ||  this.repoFormControl?.value.toString().trim() != this.currentRepo) {
         this.commitsArray =  await this.appService.getGithubCommits(
           this.ownerFormControl?.value.toString().trim(),
           this.repoFormControl?.value.toString().trim(),
-          0
+          1
         )
-        this.currentPage = 0;
+
+        this.currentPage = 1;
         resultLength = this.commitsArray.length;
-        this.currentOwner = this.ownerFormControl?.value;
-        this.currentRepo = this.repoFormControl?.value;
+        this.currentOwner = this.ownerFormControl?.value.toString().trim();
+        this.currentRepo = this.repoFormControl?.value.toString().trim();
       } else {
         const results = await this.appService.getGithubCommits(
           this.ownerFormControl?.value.toString().trim(),
