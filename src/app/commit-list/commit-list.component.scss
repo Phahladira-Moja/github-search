@@ -1,0 +1,52 @@
+
+.commit-card {
+  border-radius: 4px;
+  border: 1px solid #eee;
+  background-color: white;
+  height: 45px;
+  width: 97.5%;
+  margin: 0 8px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  transition: all 0.2s ease-in-out;
+
+  img {
+    width: 40px;
+    height: 40px;
+    display: block;
+    border-radius: 50%;
+  }
+
+  .commit-message {
+    width: 85%;
+    font-size: 14px;
+  }
+
+  .commit-message p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .icon-button {
+    border: none;
+    background-color: transparent;
+  }
+
+  .icon-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+  }
+
+  .icon-button:active {
+    box-shadow: 0 2px #666;
+    transform: translateY(1px);
+  }
+}
+
+.commit-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+}

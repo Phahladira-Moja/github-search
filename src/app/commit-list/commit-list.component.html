@@ -1,0 +1,12 @@
+<div class="commit-card" *ngFor="let commit of commitsArray ">
+  <img [src]="commit.committer.avatarUrl">
+  <div class="commit-message"> <p><b>Commit Message:</b> {{ commit.message }}</p> </div>
+  <button *ngIf="!commit.readLater; else readLater" class="icon-button" (click)="selectCommit(commit)">
+    <mat-icon >bookmark_border</mat-icon>
+  </button>
+  <ng-template #readLater>
+    <button class="icon-button" (click)="selectCommit(commit)">
+      <mat-icon>bookmark</mat-icon>
+    </button>
+  </ng-template>
+</div>

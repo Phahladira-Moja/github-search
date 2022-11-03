@@ -1,3 +1,4 @@
+<script src="services/app.service.ts"></script>
 <div class="toolbar">
   <h2>Github Commit Search</h2>
   <div class="spacer"></div>
@@ -8,17 +9,8 @@
 
   <!--Search Form Component-->
   <div class="form-container">
-    <form [formGroup]="formGroup" class="form-row" (ngSubmit)="searchForUser()">
-      <input class="input-field" type="text" formControlName="owner" placeholder="Please Enter Repo Owner">
-      <input class="input-field" type="text" formControlName="repo"  placeholder="Please Enter Repo Name">
-      <input [disabled]="!formGroup.valid" class="submit-button"  type="submit" value="Search">
-      <input [disabled]="!canViewMore" class="submit-button" type="submit" id="more-button" value="Next">
-    </form>
-    <form [formGroup]="searchFormGroup" class="form-row">
-      <input id="search-field" class="input-field" type="text" formControlName="search" placeholder="Please Enter Commit Message">
-    </form>
+    <app-form-container [canViewMore]="canViewMore" (commitSearchParams)="searchForUser($event)" (enteredSearchString)="onChange($event)"></app-form-container>
   </div>
-
 
   <!--Commit History Component-->
 
@@ -29,60 +21,35 @@
     </div>
 
     <div class="commits-tab-container" *ngIf="tabIndex == 0; else readLaterContainer">
-        <div id="commit-div" *ngIf="((isSearching && searchArray.length > 0) || (!isSearching && commitsArray.length > 0)); else emptyPage">
-          <div class="commit-card" *ngFor="let commit of (isSearching ? searchArray  : commitsArray)">
-            <img [src]="commit.committer.avatarUrl">
-            <div class="commit-message"> <p><b>Commit Message:</b> {{ commit.message }}</p> </div>
-            <button *ngIf="!commit.readLater; else readLater" class="icon-button" (click)="saveToReadLater(commit)">
-              <mat-icon >bookmark_border</mat-icon>
-            </button>
-            <ng-template #readLater>
-              <button class="icon-button" (click)="saveToReadLater(commit)">
-                <mat-icon>bookmark</mat-icon>
-              </button>
-            </ng-template>
-          </div>
-        </div>
-      
+
+      <div id="commit-div" *ngIf="((isSearching && searchArray.length > 0) || (!isSearching && commitsArray.length > 0)); else emptyPage">
+        <app-commit-list [commitsArray]="(isSearching ? searchArray  : commitsArray)" (selectedCommit)="saveToReadLater($event)"></app-commit-list>
+      </div>
 
       <ng-template #emptyPage>
-        <div class="empty-image-container">
-          <img id="empty-logo" src="../assets/empty.png" alt="empty-page-logo" >
-          <h2>No Commits Present</h2>
-        </div>
+        <app-empty-image></app-empty-image>
       </ng-template>
 
     </div>
 
-    <ng-template #readLaterContainer  >
+    <ng-template #readLaterContainer >
+
       <div class="commits-tab-container">
+
         <div *ngIf="(isSearching && searchArray.length > 0) || (!isSearching && readLaterArray.length > 0); else emptyPage">
-          <div class="commit-card" *ngFor="let commit of (isSearching ? searchArray  : readLaterArray)">
-            <img [src]="commit.committer.avatarUrl">
-            <div class="commit-message"> <p><b>Commit Message:</b> {{ commit.message }}</p> </div>
-            <button *ngIf="!commit.readLater; else readLater" class="icon-button" (click)="saveToReadLater(commit)">
-              <mat-icon >bookmark_border</mat-icon>
-            </button>
-            <ng-template #readLater>
-              <button class="icon-button" (click)="saveToReadLater(commit)">
-                <mat-icon>bookmark</mat-icon>
-              </button>
-            </ng-template>
-          </div>
+          <app-commit-list [commitsArray]="(isSearching ? searchArray  : readLaterArray)" (selectedCommit)="saveToReadLater($event)"></app-commit-list>
         </div>
-  
+
         <ng-template #emptyPage>
-          <div class="empty-image-container">
-            <img id="empty-logo" src="../assets/empty.png" alt="empty-page-logo" >
-            <h2>No Commits Present</h2>
-          </div>
+          <app-empty-image></app-empty-image>
         </ng-template>
+
       </div>
+
     </ng-template>
 
-
-
   </div>
+
   <ng-template #loader>
     <div class="mat-spinner">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>

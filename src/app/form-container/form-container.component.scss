@@ -1,0 +1,59 @@
+.form-row {
+  display: flex;
+  margin: 8px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  .input-field {
+    width: 40%;
+    margin: 0 8px;
+    padding: 0 8px;
+    min-height: 34px;
+    border-radius: 4px;
+    border: 0.25px black solid;
+  }
+
+  #search-field {
+    width: 100%;
+  }
+
+  input:focus {
+    outline: none !important;
+    border: 1.5px #059862 solid;
+  }
+
+  .submit-button {
+    padding: 0 16px;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    min-height: 34px;
+    background-color: #059862;
+    border: none;
+    border-radius: 4px;
+  }
+
+  #more-button{
+    margin-left: 8px;
+  }
+
+
+  .submit-button:hover {background-color: #3e8e41}
+
+  .submit-button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 2px #666;
+    transform: translateY(1px);
+  }
+
+  .submit-button:disabled {
+    background-color: gray;
+  }
+
+  .text-danger {
+    color: red;
+    font-size: 14px;
+  }
+
+}

@@ -1,0 +1,24 @@
+.empty-image-container {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  h4 {
+    text-align: center;
+  }
+
+  .empty-image-container img {
+    margin: 0 16px;
+  }
+
+  .empty-logo {
+    width: 36%;
+    margin: 0 8px;
+  }
+
+}

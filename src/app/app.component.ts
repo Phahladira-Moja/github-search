@@ -25,64 +25,39 @@ export class AppComponent implements OnInit{
   private currentOwner = '';
   private currentRepo = '';
 
-  formGroup = new FormGroup({
-    owner: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    repo: new FormControl('', [Validators.required, Validators.minLength(3)])
-  })
-
-  searchFormGroup = new FormGroup({
-    search: new FormControl('', [Validators.required]),
-})
-
   constructor(private appService: AppService) {}
 
-  get ownerFormControl() {
-    return this.formGroup.get('owner');
-  }
+  ngOnInit() {}
 
-  get repoFormControl() {
-    return this.formGroup.get('repo');
-  }
-
-  get searchFormControl() {
-    return this.searchFormGroup.get('search');
-  }
-
-  ngOnInit() {
-    this.searchFormControl?.valueChanges.subscribe(
-      value => this.onChange(value)
-    )
-  }
-
-  async searchForUser(){
+  async searchForUser(searchArray: string[]){
     try {
       let resultLength = 0
       this.isLoading = true;
-      if (this.ownerFormControl?.value.toString().trim() !=this.currentOwner ||  this.repoFormControl?.value.toString().trim() != this.currentRepo) {
+      if (searchArray[0].trim() !=this.currentOwner ||  searchArray[1].trim() != this.currentRepo) {
         this.commitsArray =  await this.appService.getGithubCommits(
-          this.ownerFormControl?.value.toString().trim(),
-          this.repoFormControl?.value.toString().trim(),
+          searchArray[0].trim(),
+          searchArray[1].trim(),
           1
         )
 
         this.currentPage = 1;
         resultLength = this.commitsArray.length;
-        this.currentOwner = this.ownerFormControl?.value.toString().trim();
-        this.currentRepo = this.repoFormControl?.value.toString().trim();
+        this.currentOwner = searchArray[0].trim();
+        this.currentRepo = searchArray[1].trim();
       } else {
         const results = await this.appService.getGithubCommits(
-          this.ownerFormControl?.value.toString().trim(),
-          this.repoFormControl?.value.toString().trim(),
+          searchArray[0].trim(),
+          searchArray[1].trim(),
           this.currentPage
         )
         resultLength = results.length;
         this.commitsArray = this.commitsArray.concat(results)
       }
 
-      
+
       this.isLoading = false;
 
-     
+
 
       if (resultLength == 20) {
         this.currentPage = this.currentPage+1;
@@ -125,7 +100,7 @@ export class AppComponent implements OnInit{
         })
 
         const result: any = this.appService.deleteCommit(commit.id);
-        
+
         if (result.Result == "FAILED") {
           alert(result.Message)
         }
@@ -156,11 +131,11 @@ export class AppComponent implements OnInit{
       this.isSearching = true;
       if (this.isViewingReadLaterCommits) {
         this.searchArray = this.readLaterArray.filter(commit =>
-          commit.message.toLowerCase().includes(this.searchFormControl?.value.toLowerCase())
+          commit.message.toLowerCase().includes(value.toLowerCase())
         )
       } else {
         this.searchArray = this.commitsArray.filter(commit =>
-          commit.message.toLowerCase().includes(this.searchFormControl?.value.toLowerCase())
+          commit.message.toLowerCase().includes(value.toLowerCase())
         )
       }
     }

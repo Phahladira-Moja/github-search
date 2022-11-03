@@ -1,0 +1,9 @@
+<form [formGroup]="formGroup" class="form-row" (ngSubmit)="searchForGitCommitHistory()">
+  <input class="input-field" type="text" formControlName="owner" placeholder="Please Enter Repo Owner">
+  <input class="input-field" type="text" formControlName="repo"  placeholder="Please Enter Repo Name">
+  <input [disabled]="!formGroup.valid" class="submit-button"  type="submit" value="Search">
+  <input [disabled]="!canViewMore" class="submit-button" type="submit" id="more-button" value="Next">
+</form>
+<form [formGroup]="searchFormGroup" class="form-row">
+  <input id="search-field" class="input-field" type="text" formControlName="search" placeholder="Please Enter Commit Message">
+</form>
